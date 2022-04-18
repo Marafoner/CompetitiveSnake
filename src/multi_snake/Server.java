@@ -22,6 +22,7 @@ public class Server {
 	private ServerSocket server;
 	private Socket client;
 	private Socket client2;
+	
 	private InputStream direction_input;
 	private DataInputStream dataInput;
 	
@@ -31,9 +32,9 @@ public class Server {
 	private ArrayList<Tail> tail_list;
 	private int ClientsConnected = 0;
 	
-	public Server() throws IOException, InterruptedException {
+	public Server(int PORT) throws IOException, InterruptedException {
 		//Initializing Server and client connections
-		ServerSocket server = new ServerSocket(8080);
+		ServerSocket server = new ServerSocket(PORT);
 		System.out.println("[Server has started]");
 		Socket client = server.accept();
 		//Socket client = server.accept();
@@ -62,15 +63,20 @@ public class Server {
 	 * in other case cannot change when received in "Client" class.
 	 */
 	public void run(Socket client, DataInputStream dataInput, ObjectOutputStream objectOutput) throws InterruptedException, IOException {
+		Snake user = null;
+		if (this.client == client)
+			user = snake_board[0];
+		else
+			user = snake_board[1];
 		try {
 			while(client.isConnected()) {
 				TimeUnit.SECONDS.sleep(2);
 				char direction = dataInput.readChar();
-				client_snake.get_tail_list().get(0).set_direction(direction);
-				client_snake.move_tails();
+				user.get_tail_list().get(0).set_direction(direction);
+				user.move_tails();
 				objectOutput.reset();
-				objectOutput.writeObject(client_snake);
-				System.out.println(client_snake.get_tail_list().get(0).get_direction());
+				objectOutput.writeObject(snake_board);
+				System.out.println(user.get_tail_list().get(0).get_direction());
 			}
 		} catch (IOException e) {
 			objectOutput.flush();
@@ -85,7 +91,7 @@ public class Server {
 		return client.getRemoteSocketAddress().toString().replace("/", "");
 	}
 	
-	public static void main(String args[]) throws IOException, InterruptedException {
-		new Server();
+	public static void main(String args[]) throws IOException, InterruptedException, ClassNotFoundException {
+		new Server(8080);
 	}
 }

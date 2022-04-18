@@ -16,7 +16,7 @@ public class Server {
 	 */
 	
 	//DEBUG DELETE ME
-	Snake temp = new Snake(-1);
+	Snake temp = new Snake(-1, 9);
 
 	private ServerSocket server;
 	private Socket client;

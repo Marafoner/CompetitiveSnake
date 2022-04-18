@@ -41,7 +41,7 @@ public class Client {
 				dataOutput.writeChar(WM.get_pressed_key());
 				Object object = objectInput.readObject();
 				Snake snake_list = (Snake) object;
-				System.out.println(snake_list.get_tail_list().get(0).get_direction());
+				System.out.println(snake_list.get_tail_list().get(0).get_x());
 			}
 		} catch (IOException e) {
 			dataOutput.flush();

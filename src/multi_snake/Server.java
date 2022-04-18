@@ -9,28 +9,26 @@ import java.util.concurrent.TimeUnit;
 //added a comment
 public class Server {
 	/*
-	 * Server class is managing all of the logic through using Snake class,
+	 * "Server" class is managing all of the logic through using Snake class,
 	 * which is later sent through "ObjectOutputStream" as a Snake[] to the client which
 	 * visualizes all of the boards through using an ArrayList<Tail> of both
 	 * Snake objects in the array.
 	 */
 	
-	//DEBUG DELETE ME
-	Snake client_snake = new Snake(0, 9);
-	Snake client2_snake = new Snake(1, 9);
+	private Snake client_snake = new Snake(0, 9);
+	private Snake client2_snake = new Snake(1, 9);
+	private Snake[] snake_board = {client_snake, client2_snake};
+	
 	private ServerSocket server;
 	private Socket client;
 	private Socket client2;
-	
 	private InputStream direction_input;
 	private DataInputStream dataInput;
 	
 	private OutputStream snake_stream;
 	private ObjectOutputStream objectOutput;
 	
-	//DEBUG
 	private ArrayList<Tail> tail_list;
-	private Snake[] snake_board;
 	private int ClientsConnected = 0;
 	
 	public Server() throws IOException, InterruptedException {

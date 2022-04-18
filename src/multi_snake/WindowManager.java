@@ -8,7 +8,10 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class WindowManager extends JFrame implements KeyListener{
-	
+	/*
+	 * "WindowManager" class manages the GUI and key inputs.
+	 * 
+	 */
 	private char pressed_key;
 	JFrame frame = new JFrame("Snake");
 	JPanel board = new JPanel();

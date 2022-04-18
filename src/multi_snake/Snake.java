@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class Snake implements Serializable{
 	/*
 	 * @param serialVersionUID is needed in order to serialize a class in order to
-	 * create an Snake object and send it and receive it successfully.
+	 * create a Snake object and send it and receive it successfully.
 	 * 
-	 * Snake class manages the game logic and allows to host two different boards for
-	 * two different clients.
+	 * "Snake" class manages the game logic and allows to host two different boards for
+	 * two different clients using Snake[].
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -126,6 +126,9 @@ public class Snake implements Serializable{
 	}
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
+	}
+	public int get_tail_SIZE() {
+		return tail_list.size();
 	}
 	public String toString_tail(Tail tail) {
 		return "(" + tail.get_x() + "," + tail.get_y() + ")";

@@ -71,15 +71,23 @@ public class Snake implements Serializable{
 			Tail current_tail = tail_list.get(i);
 			switch (current_tail.get_direction()) {
 			case 'w':
-				current_tail.set_x(current_tail.get_y()+1);
+				if (current_tail.get_direction() == 's')
+					break;
+				current_tail.set_y(current_tail.get_y()+1);
 				break;
 			case 's':
-				current_tail.set_x(current_tail.get_y()-1);
+				if (current_tail.get_direction() == 'w')
+					break;
+				current_tail.set_y(current_tail.get_y()-1);
 				break;
 			case 'a':
+				if (current_tail.get_direction() == 'd')
+					break;
 				current_tail.set_x(current_tail.get_x()-1);
 				break;
 			case 'd':
+				if (current_tail.get_direction() == 'a')
+					break;
 				current_tail.set_x(current_tail.get_x()+1);
 				break;
 			}
@@ -118,6 +126,9 @@ public class Snake implements Serializable{
 	}
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
+	}
+	public String toString_tail(Tail tail) {
+		return "(" + tail.get_x() + "," + tail.get_y() + ")";
 	}
 
 

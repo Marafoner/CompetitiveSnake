@@ -16,8 +16,8 @@ public class Server {
 	 */
 	
 	//DEBUG DELETE ME
-	Snake temp = new Snake(-1, 9);
-
+	Snake client_snake = new Snake(0, 9);
+	Snake client2_snake = new Snake(1, 9);
 	private ServerSocket server;
 	private Socket client;
 	private Socket client2;
@@ -68,10 +68,11 @@ public class Server {
 			while(client.isConnected()) {
 				TimeUnit.SECONDS.sleep(2);
 				char direction = dataInput.readChar();
-				temp.get_tail_list().get(0).set_direction(direction);
+				client_snake.get_tail_list().get(0).set_direction(direction);
+				client_snake.move_tails();
 				objectOutput.reset();
-				objectOutput.writeObject(temp);
-				System.out.println(temp.get_tail_list().get(0).get_direction());
+				objectOutput.writeObject(client_snake);
+				System.out.println(client_snake.get_tail_list().get(0).get_direction());
 			}
 		} catch (IOException e) {
 			objectOutput.flush();

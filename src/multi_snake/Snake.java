@@ -14,6 +14,7 @@ public class Snake implements Serializable{
 
 	private int clientID;
 	private int SCORE;
+	private int MAX_SCORE;
 	private int BOARD_SIZE;
 	private ArrayList<Tail> tail_list = new ArrayList<Tail>();
 	Apple apple;
@@ -22,7 +23,7 @@ public class Snake implements Serializable{
 		this.BOARD_SIZE = BOARD_SIZE;
 		this.clientID = clientID;
 		tail_list.add(new Tail(3,3, 'd'));
-		add_tail(create_tail());
+		this.MAX_SCORE = BOARD_SIZE-tail_list.size()-1;
 		apple = new Apple(tail_list, 9);
 	}
 	
@@ -64,22 +65,27 @@ public class Snake implements Serializable{
 		}
 			
 	}
-	public void move() {
-		switch (get_snakeHead().get_direction()) {
-		case 'w':
-			
-			break;
-		case 's':
-			
-			break;
-		case 'a':
-			
-			break;
-		case 'd':
-			
-			break;
+	
+	public void move_tails() {
+		for (int i = 0; i < tail_list.size(); i++) {
+			Tail current_tail = tail_list.get(i);
+			switch (current_tail.get_direction()) {
+			case 'w':
+				current_tail.set_x(current_tail.get_y()+1);
+				break;
+			case 's':
+				current_tail.set_x(current_tail.get_y()-1);
+				break;
+			case 'a':
+				current_tail.set_x(current_tail.get_x()-1);
+				break;
+			case 'd':
+				current_tail.set_x(current_tail.get_x()+1);
+				break;
+			}
 		}
 	}
+	
 	public boolean collision_check() {
 		//Left and Bottom Wall Collision
 		if (get_snakeHead().get_x() < 0 || get_snakeHead().get_y() < 0)
@@ -94,6 +100,7 @@ public class Snake implements Serializable{
 		}
 		return false;
 	}
+	
 	public ArrayList<Tail> get_tail_list() {
 		return tail_list;
 	}
@@ -108,6 +115,9 @@ public class Snake implements Serializable{
 	}
 	public int get_score() {
 		return SCORE;
+	}
+	public int get_MAXSCORE() {
+		return MAX_SCORE;
 	}
 
 

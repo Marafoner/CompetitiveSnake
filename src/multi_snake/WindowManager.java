@@ -16,7 +16,7 @@ public class WindowManager extends JFrame implements KeyListener{
 	JFrame frame = new JFrame("Snake");
 	JPanel board = new JPanel();
 	WindowManager() {
-		frame.setSize(300, 300);
+		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.addKeyListener(this);

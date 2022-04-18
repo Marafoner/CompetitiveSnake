@@ -47,7 +47,7 @@ public class Client {
 			dataOutput.flush();
 			dataOutput.close();
 			client.close();
-			System.out.println("Server crashed :(");
+			System.err.println("Server crashed :(");
 			e.printStackTrace();
 		}
 		dataOutput.flush();

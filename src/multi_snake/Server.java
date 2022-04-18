@@ -82,7 +82,7 @@ public class Server {
 			objectOutput.flush();
 			objectOutput.close();
 			client.close();
-			System.out.println("Client Crashed :(");
+			System.err.println("Client Crashed :(");
 			e.printStackTrace();
 		}
 	}

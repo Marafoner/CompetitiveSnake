@@ -15,21 +15,14 @@ public class Snake implements Serializable{
 	private int clientID;
 	private int SCORE;
 	private int MAX_SCORE;
-	private int SNAKE_SIZE;
+	private int SNAKE_SIZE = 1;
 	private int BOARD_SIZE;
 	private int APPLE_COUNT;
 	private ArrayList<Tail> tail_list = new ArrayList<Tail>();
 	private ArrayList<Apple> apple_list = new ArrayList<Apple>();
 	
-	Snake(int clientID, int BOARD_SIZE, int APPLE_COUNT, int SNAKE_SIZE) {
-		//Checking the legitimicy of the inputed sizes
-		if (SNAKE_SIZE > BOARD_SIZE) {
-			System.err.println("Snake is too big for the board! | Setting it to DEFAULT value of 1");
-			//Default Value of the snake Size
-			this.SNAKE_SIZE = 1;
-		}
-		else
-			this.SNAKE_SIZE = SNAKE_SIZE;
+	Snake(int clientID, int BOARD_SIZE, int APPLE_COUNT) {
+		//Checking the legitimicy of the inputed values
 		if (BOARD_SIZE < 4) {
 			System.err.println("Board size is too small! | Setting it to DEFAULT value of 7");
 			//Default Value of the snake Size
@@ -37,13 +30,13 @@ public class Snake implements Serializable{
 		}
 		else
 			this.BOARD_SIZE = BOARD_SIZE;
-		if (APPLE_COUNT < 0)
+		if (APPLE_COUNT <= 0)
 			this.APPLE_COUNT = 1;
 		else
 			this.APPLE_COUNT = APPLE_COUNT;
 		this.MAX_SCORE = BOARD_SIZE-SNAKE_SIZE-APPLE_COUNT;
 		this.clientID = clientID;
-		
+		//populating
 		for (int i = 0; i < SNAKE_SIZE; i++) {
 			if (i == 0)
 				tail_list.add(new Tail(BOARD_SIZE-3, BOARD_SIZE-3, 'd')
@@ -56,12 +49,15 @@ public class Snake implements Serializable{
 	}
 	
 	public Tail create_tail() {
-		Tail new_tail = new Tail(-1, -1, ' ');
+		Tail new_tail = new Tail(-1, -1, ' '); // <-- might not need this
 		switch (get_lastTail().get_direction()) {
 		case 'w':
+			/*
 			new_tail.set_direction('w');
 			new_tail.set_x(get_lastTail().get_x());
 			new_tail.set_y(get_lastTail().get_y()-1);
+			*/
+			return new Tail(get_lastTail().get_x(), get_lastTail().get_y, get_lastTail.get_direction()); //?? can i do this ??
 			break;
 		case 's':
 			new_tail.set_direction('s');
@@ -85,17 +81,6 @@ public class Snake implements Serializable{
 		tail_list.add(tail);
 	}
 
-	public void eaten_apple() {
-		for (int i = 0; i < apple_list.size(); i++) {
-			Apple current_apple = apple_list.get(i);
-			if (get_snakeHead().get_x() == current_apple.get_x() && get_snakeHead().get_y() == current_apple.get_y()) {
-				add_tail(create_tail());
-				SCORE++;
-			}
-		}
-			
-	}
-	
 	public void move_tails() {
 		int last_tail;
 		for (int i = 0; i < tail_list.size(); i++) {
@@ -105,24 +90,56 @@ public class Snake implements Serializable{
 			switch (current_tail.get_direction()) {
 			case 'w':
 				current_tail.set_y(current_tail.get_y()+1);
+				if (i==0) { // <- make it ran once better
+					if (collision_check()) {
+						//make the game stop
+						System.err.println("oof");
+						break;
+					}
+					eaten_apple();
+				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 					
 				break;
 			case 's':
 				current_tail.set_y(current_tail.get_y()-1);
+				if (i==0) {
+					if (collision_check()) {
+						//make the game stop
+						System.err.println("oof");
+						break;
+					}
+					eaten_apple();
+				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
 				break;
 			case 'a':
 				current_tail.set_x(current_tail.get_x()-1);
+				if (i==0) {
+					if (collision_check()) {
+						//make the game stop
+						System.err.println("oof");
+						break;
+					}
+					eaten_apple();
+				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
 				break;
 			case 'd':
 				current_tail.set_x(current_tail.get_x()+1);
+				if (i==0) { 
+					if (collision_check()) {
+						//make the game stop
+						System.err.println("oof");
+						break;
+					}
+					eaten_apple();
+				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
@@ -137,7 +154,17 @@ public class Snake implements Serializable{
 			}
 		*/
 	}
-	
+					      
+	public void eaten_apple() {
+		for (int i = 0; i < apple_list.size(); i++) {
+			Apple current_apple = apple_list.get(i);
+			if (get_snakeHead().get_x() == current_apple.get_x() && get_snakeHead().get_y() == current_apple.get_y()) {
+				add_tail(create_tail());
+				SCORE++;
+			}
+		}
+			
+	}
 	
 	public boolean collision_check() {
 		//Left and Bottom Wall Collision
@@ -153,18 +180,18 @@ public class Snake implements Serializable{
 		}
 		return false;
 	}
-	
+
 	public ArrayList<Tail> get_tail_list() {
 		return tail_list;
 	}
+	public ArrayList<Apple> get_apple_list() {
+		return apple_list;
+	}				      
 	public Tail get_snakeHead() {
 		return tail_list.get(0);
 	}
 	public Tail get_lastTail() {
 		return tail_list.get(tail_list.size()-1);
-	}
-	public ArrayList<Apple> get_apple() {
-		return apple_list;
 	}
 	public int get_ClientID() {
 		return clientID;
@@ -174,9 +201,6 @@ public class Snake implements Serializable{
 	}
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
-	}
-	public int get_tail_SIZE() {
-		return tail_list.size();
 	}
 	public String toString_tail(Tail tail) {
 		return "(" + tail.get_x() + "," + tail.get_y() + ")";

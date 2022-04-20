@@ -97,24 +97,47 @@ public class Snake implements Serializable{
 	}
 	
 	public void move_tails() {
+		int last_tail;
 		for (int i = 0; i < tail_list.size(); i++) {
+			//making it easier to read
 			Tail current_tail = tail_list.get(i);
+			Tail last_checked_tail = tail_list.get(last_tail);
 			switch (current_tail.get_direction()) {
 			case 'w':
 				current_tail.set_y(current_tail.get_y()+1);
+				if (current_tail.get_direction() != last_checked_tail.get_direction())
+					current_tail.set_direction(last_checked_tail.get_direction());
+					
 				break;
 			case 's':
 				current_tail.set_y(current_tail.get_y()-1);
+				if (current_tail.get_direction() != last_checked_tail.get_direction())
+					current_tail.set_direction(last_checked_tail.get_direction());
+
 				break;
 			case 'a':
 				current_tail.set_x(current_tail.get_x()-1);
+				if (current_tail.get_direction() != last_checked_tail.get_direction())
+					current_tail.set_direction(last_checked_tail.get_direction());
+
 				break;
 			case 'd':
 				current_tail.set_x(current_tail.get_x()+1);
+				if (current_tail.get_direction() != last_checked_tail.get_direction())
+					current_tail.set_direction(last_checked_tail.get_direction());
+
 				break;
 			}
+			last_tail = i;
 		}
+		/* old bad code for reference
+			for (int i = tail_list.size(); i > 0; i++) {
+				if (tail_list.get(i).get_direction() != tail_list.get(i-1).get_direction())
+					tail_list.get(i).set_direction()(Tail_List.get(i-1).get_direction());
+			}
+		*/
 	}
+	
 	
 	public boolean collision_check() {
 		//Left and Bottom Wall Collision

@@ -15,8 +15,8 @@ public class Server {
 	 * Snake objects in the array.
 	 */
 	
-	private Snake client_snake = new Snake(0, 9);
-	private Snake client2_snake = new Snake(1, 9);
+	private Snake client_snake = new Snake(0, 9, 1);
+	private Snake client2_snake = new Snake(1, 9, 1);
 	private Snake[] snake_board = {client_snake, client2_snake};
 	
 	private ServerSocket server;

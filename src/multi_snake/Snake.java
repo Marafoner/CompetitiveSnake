@@ -17,12 +17,13 @@ public class Snake implements Serializable{
 	private int MAX_SCORE;
 	private int SNAKE_SIZE = 1;
 	private int BOARD_SIZE;
+	@SuppressWarnings("unused")
 	private int APPLE_COUNT;
 	private ArrayList<Tail> tail_list = new ArrayList<Tail>();
 	private ArrayList<Apple> apple_list = new ArrayList<Apple>();
 	
 	Snake(int clientID, int BOARD_SIZE, int APPLE_COUNT) {
-		//Checking the legitimicy of the inputed values
+		//Checking the legitimacy of the inputed values
 		if (BOARD_SIZE < 4) {
 			System.err.println("Board size is too small! | Setting it to DEFAULT value of 7");
 			//Default Value of the snake Size
@@ -39,12 +40,12 @@ public class Snake implements Serializable{
 		//populating
 		for (int i = 0; i < SNAKE_SIZE; i++) {
 			if (i == 0)
-				tail_list.add(new Tail(BOARD_SIZE-3, BOARD_SIZE-3, 'd')
+				tail_list.add(new Tail(BOARD_SIZE-3, BOARD_SIZE-3, 'd'));
 			if (i > 0)
-				tail_list.add(add_tail(create_tail));
+				add_tail(create_tail());
 		}
 		for (int i = 0; i < APPLE_COUNT; i++) {
-			apple_list.add(new Apple());
+			apple_list.add(new Apple(tail_list, BOARD_SIZE));
 		}
 	}
 	
@@ -56,9 +57,9 @@ public class Snake implements Serializable{
 			new_tail.set_direction('w');
 			new_tail.set_x(get_lastTail().get_x());
 			new_tail.set_y(get_lastTail().get_y()-1);
-			*/
-			return new Tail(get_lastTail().get_x(), get_lastTail().get_y, get_lastTail.get_direction()); //?? can i do this ??
 			break;
+			*/
+			return new Tail(get_lastTail().get_x(), get_lastTail().get_y(), get_lastTail().get_direction()); //?? can i do this ??
 		case 's':
 			new_tail.set_direction('s');
 			new_tail.set_x(get_lastTail().get_x());
@@ -82,7 +83,7 @@ public class Snake implements Serializable{
 	}
 
 	public void move_tails() {
-		int last_tail;
+		int last_tail = 0;
 		for (int i = 0; i < tail_list.size(); i++) {
 			//making it easier to read
 			Tail current_tail = tail_list.get(i);

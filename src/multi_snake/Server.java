@@ -74,6 +74,8 @@ public class Server {
 				char direction = dataInput.readChar();
 				user.get_tail_list().get(0).set_direction(direction);
 				user.move_tails();
+				user.collision_check();
+				user.eaten_apple();
 				objectOutput.reset();
 				objectOutput.writeObject(snake_board);
 				System.out.println(user.get_tail_list().get(0).get_direction());

@@ -23,7 +23,7 @@ public class Client {
 	private DataOutputStream dataOutput;
 	
 	private WindowManager WM;
-	private ArrayList<Tail> tail_list;
+	private Snake[] snake_list;
 	
 	public Client(String IP, int PORT) throws UnknownHostException, IOException, InterruptedException, ClassNotFoundException {
 		//Initializing client server connection
@@ -40,14 +40,23 @@ public class Client {
 				TimeUnit.SECONDS.sleep(2);
 				dataOutput.writeChar(WM.get_pressed_key());
 				Object object = objectInput.readObject();
-				Snake[] snake_list = (Snake[]) object;
-				System.out.println(snake_list[1].toString_tail(snake_list[1].get_snakeHead()));
+				snake_list = (Snake[]) object;
+				/*
+				System.out.print("(" + snake_list[1].get_apple_list().get(0).get_x() + "," + snake_list[1].get_apple_list().get(0).get_y() + ") ");
+				System.err.println(snake_list[1].get_score());
+				System.out.println("Head:" + snake_list[1].toString_tail(snake_list[1].get_snakeHead()) + " ");
+				System.out.print(snake_list[1].get_tail_list().size());
+				*/
+				System.out.println(snake_list[1].toString_tail());
 			}
 		} catch (IOException e) {
 			dataOutput.flush();
 			dataOutput.close();
 			client.close();
-			System.err.println("Server crashed :(");
+			System.err.println("Server crashed :( \nTail List");
+			for (int i = 0; i < snake_list[1].get_tail_list().size(); i++) {
+				System.out.println(snake_list[1].get_tail_list().get(i).toString());
+			}
 			e.printStackTrace();
 		}
 		dataOutput.flush();

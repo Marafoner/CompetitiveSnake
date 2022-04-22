@@ -105,42 +105,18 @@ public class Snake implements Serializable{
 				break;
 			case 's':
 				current_tail.set_y(current_tail.get_y()-1);
-				if (i==0) {
-					if (collision_check()) {
-						//make the game stop
-						System.err.println("oof");
-						break;
-					}
-					eaten_apple();
-				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
 				break;
 			case 'a':
 				current_tail.set_x(current_tail.get_x()-1);
-				if (i==0) {
-					if (collision_check()) {
-						//make the game stop
-						System.err.println("oof");
-						break;
-					}
-					eaten_apple();
-				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
 				break;
 			case 'd':
 				current_tail.set_x(current_tail.get_x()+1);
-				if (i==0) { 
-					if (collision_check()) {
-						//make the game stop
-						System.err.println("oof");
-						break;
-					}
-					eaten_apple();
-				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 
@@ -161,6 +137,7 @@ public class Snake implements Serializable{
 			Apple current_apple = apple_list.get(i);
 			if (get_snakeHead().get_x() == current_apple.get_x() && get_snakeHead().get_y() == current_apple.get_y()) {
 				add_tail(create_tail());
+				current_apple.spawn_apple(tail_list, BOARD_SIZE);
 				SCORE++;
 			}
 		}
@@ -176,8 +153,10 @@ public class Snake implements Serializable{
 			return true;
 		//Tail Collision
 		for (int i = 1; i < tail_list.size(); i++) {
-			if (get_snakeHead().get_x() == tail_list.get(i).get_x() && get_snakeHead().get_y() == tail_list.get(i).get_y())
+			if (get_snakeHead().get_x() == tail_list.get(i).get_x() && get_snakeHead().get_y() == tail_list.get(i).get_y()) {
+				System.err.println("I collided with tail somehow? :(");
 				return true;
+			}
 		}
 		return false;
 	}
@@ -203,8 +182,8 @@ public class Snake implements Serializable{
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
 	}
-	public String toString_tail(Tail tail) {
-		return "(" + tail.get_x() + "," + tail.get_y() + ")";
+	public String toString_tail() {
+		return "(" + get_snakeHead().get_x() + "," + get_snakeHead().get_y() + ")" + "Score: " + get_score() + "\n Apple: (" + get_apple_list().get(0).get_x() + get_apple_list().get(0).get_y() + ")";
 	}
 
 

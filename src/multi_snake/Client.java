@@ -55,7 +55,7 @@ public class Client {
 			client.close();
 			System.err.println("Server crashed :( \nTail List");
 			for (int i = 0; i < snake_list[1].get_tail_list().size(); i++) {
-				System.out.println(snake_list[1].get_tail_list().get(i).toString());
+				System.out.print(snake_list[1].get_tail_list().get(i).toString() + ",");
 			}
 			e.printStackTrace();
 		}

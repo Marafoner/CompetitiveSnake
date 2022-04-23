@@ -91,14 +91,6 @@ public class Snake implements Serializable{
 			switch (current_tail.get_direction()) {
 			case 'w':
 				current_tail.set_y(current_tail.get_y()+1);
-				if (i==0) { // <- make it ran once better
-					if (collision_check()) {
-						//make the game stop
-						System.err.println("oof");
-						break;
-					}
-					eaten_apple();
-				}
 				if (current_tail.get_direction() != last_checked_tail.get_direction())
 					current_tail.set_direction(last_checked_tail.get_direction());
 					
@@ -131,16 +123,25 @@ public class Snake implements Serializable{
 			}
 		*/
 	}
-					      
-	public void eaten_apple() {
+	/*
+	 * For Competitive GameMode where if a user eats an apple
+	 * then their opponent's snake will increase in size and vice versa.
+	 */
+	public void increase_size(boolean opponent_apple_eaten) {
+		if(opponent_apple_eaten) 
+			add_tail(create_tail());
+	}
+	public boolean eaten_apple() {
 		for (int i = 0; i < apple_list.size(); i++) {
 			Apple current_apple = apple_list.get(i);
 			if (get_snakeHead().get_x() == current_apple.get_x() && get_snakeHead().get_y() == current_apple.get_y()) {
 				add_tail(create_tail());
 				current_apple.spawn_apple(tail_list, BOARD_SIZE);
 				SCORE++;
+				return true;
 			}
 		}
+		return false;
 			
 	}
 	

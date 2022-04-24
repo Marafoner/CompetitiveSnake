@@ -70,15 +70,16 @@ public class Server {
 			user = snake_board[1];
 		try {
 			while(client.isConnected()) {
-				TimeUnit.SECONDS.sleep(2);
+				TimeUnit.MILLISECONDS.sleep(250);
 				char direction = dataInput.readChar();
+				//Runs all of the logic right here
 				user.get_tail_list().get(0).set_direction(direction);
 				user.move_tails();
 				user.collision_check();
 				user.eaten_apple();
+				//Sends the snake boards to the client to render
 				objectOutput.reset();
 				objectOutput.writeObject(snake_board);
-				System.out.println(user.get_tail_list().get(0).get_direction());
 			}
 		} catch (IOException e) {
 			objectOutput.flush();
@@ -89,6 +90,9 @@ public class Server {
 		}
 	}
 	
+	public Snake[] get_snake_list() {
+		return snake_board;
+	}
 	public String get_ip(Socket client) {
 		return client.getRemoteSocketAddress().toString().replace("/", "");
 	}

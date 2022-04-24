@@ -27,7 +27,6 @@ public class Client {
 	
 	public Client(String IP, int PORT) throws UnknownHostException, IOException, InterruptedException, ClassNotFoundException {
 		//Initializing client server connection
-		WM = new WindowManager();
 		Socket client = new Socket(IP, PORT);
 		System.out.println("[Client has Connected]");
 		InputStream snake_stream = client.getInputStream();
@@ -35,19 +34,17 @@ public class Client {
 		
 		OutputStream direction = client.getOutputStream();
 		DataOutputStream dataOutput = new DataOutputStream(direction);
+		
+		WM = new WindowManager(9);
 		try {
 			while(client.isConnected()) {
-				TimeUnit.SECONDS.sleep(2);
+				TimeUnit.MILLISECONDS.sleep(250);
+				//send the input to the server
 				dataOutput.writeChar(WM.get_pressed_key());
 				Object object = objectInput.readObject();
 				snake_list = (Snake[]) object;
-				/*
-				System.out.print("(" + snake_list[1].get_apple_list().get(0).get_x() + "," + snake_list[1].get_apple_list().get(0).get_y() + ") ");
-				System.err.println(snake_list[1].get_score());
-				System.out.println("Head:" + snake_list[1].toString_tail(snake_list[1].get_snakeHead()) + " ");
-				System.out.print(snake_list[1].get_tail_list().size());
-				*/
-				System.out.println(snake_list[1].toString_tail());
+				//Sends new snake boards to the GUI to render
+				WM.set_snake_list(snake_list);
 			}
 		} catch (IOException e) {
 			dataOutput.flush();

@@ -15,7 +15,7 @@ public class Snake implements Serializable{
 	private int clientID;
 	private int SCORE;
 	private int MAX_SCORE;
-	private int SNAKE_SIZE = 1;
+	private int SNAKE_SIZE = 4;
 	private int BOARD_SIZE;
 	@SuppressWarnings("unused")
 	private int APPLE_COUNT;
@@ -38,10 +38,8 @@ public class Snake implements Serializable{
 		this.MAX_SCORE = BOARD_SIZE-SNAKE_SIZE-APPLE_COUNT;
 		this.clientID = clientID;
 		//populating
-		for (int i = 0; i < SNAKE_SIZE; i++) {
-			if (i == 0)
-				tail_list.add(new Tail(BOARD_SIZE-3, BOARD_SIZE-3, 'd'));
-			if (i > 0)
+		add_tail(new Tail(BOARD_SIZE-3, BOARD_SIZE-3, 'd'));
+		for (int i = 1; i < SNAKE_SIZE; i++) {
 				add_tail(create_tail());
 		}
 		for (int i = 0; i < APPLE_COUNT; i++) {
@@ -50,78 +48,55 @@ public class Snake implements Serializable{
 	}
 	
 	public Tail create_tail() {
-		Tail new_tail = new Tail(-1, -1, ' '); // <-- might not need this
 		switch (get_lastTail().get_direction()) {
 		case 'w':
-			/*
-			new_tail.set_direction('w');
-			new_tail.set_x(get_lastTail().get_x());
-			new_tail.set_y(get_lastTail().get_y()-1);
-			break;
-			*/
-			return new Tail(get_lastTail().get_x(), get_lastTail().get_y(), get_lastTail().get_direction()); //?? can i do this ??
+			return new Tail(get_lastTail().get_x(), get_lastTail().get_y()+1, get_lastTail().get_direction());
 		case 's':
-			new_tail.set_direction('s');
-			new_tail.set_x(get_lastTail().get_x());
-			new_tail.set_y(get_lastTail().get_y()+1);
-			break;
+			return new Tail(get_lastTail().get_x(), get_lastTail().get_y()-1, get_lastTail().get_direction());
 		case 'a':
-			new_tail.set_direction('a');
-			new_tail.set_x(get_lastTail().get_x()+1);
-			new_tail.set_y(get_lastTail().get_y());
-			break;
+			return new Tail(get_lastTail().get_x()+1, get_lastTail().get_y(), get_lastTail().get_direction());
 		case 'd':
-			new_tail.set_direction('d');
-			new_tail.set_x(get_lastTail().get_x()-1);
-			new_tail.set_y(get_lastTail().get_y());
-			break;
+			return new Tail(get_lastTail().get_x()-1, get_lastTail().get_y(), get_lastTail().get_direction());
 		}
-		return new_tail;
+		return null;
 	}
 	public void add_tail(Tail tail) {
 		tail_list.add(tail);
 	}
-
+	
+	/*
+	 * There's Definitely a better way to move the snake through the snake list
+	 * I will do it later due to I need it to work to make sure GUI renders everything properly
+	 * As well as I need it to just barely function right now, which it does.
+	 */
 	public void move_tails() {
-		int last_tail = 0;
 		for (int i = 0; i < tail_list.size(); i++) {
-			//making it easier to read
-			Tail current_tail = tail_list.get(i);
-			Tail last_checked_tail = tail_list.get(last_tail);
-			switch (current_tail.get_direction()) {
+			switch(tail_list.get(i).get_direction()) {
 			case 'w':
-				current_tail.set_y(current_tail.get_y()+1);
-				if (current_tail.get_direction() != last_checked_tail.get_direction())
-					current_tail.set_direction(last_checked_tail.get_direction());
-					
+				//Tail_List.get(i).set_Y(Tail_List.get(i).get_Y()-1);
+				tail_list.get(i).set_y(tail_list.get(i).get_y()-1);
 				break;
 			case 's':
-				current_tail.set_y(current_tail.get_y()-1);
-				if (current_tail.get_direction() != last_checked_tail.get_direction())
-					current_tail.set_direction(last_checked_tail.get_direction());
-
-				break;
-			case 'a':
-				current_tail.set_x(current_tail.get_x()-1);
-				if (current_tail.get_direction() != last_checked_tail.get_direction())
-					current_tail.set_direction(last_checked_tail.get_direction());
-
+				//Tail_List.get(i).set_Y(Tail_List.get(i).get_Y()+1);
+				tail_list.get(i).set_y(tail_list.get(i).get_y()+1);
 				break;
 			case 'd':
-				current_tail.set_x(current_tail.get_x()+1);
-				if (current_tail.get_direction() != last_checked_tail.get_direction())
-					current_tail.set_direction(last_checked_tail.get_direction());
+				tail_list.get(i).set_x(tail_list.get(i).get_x()+1);
+				break;
+			case 'a':
+				//Tail_List.get(i).set_X(Tail_List.get(i).get_X()-1);
 
+				tail_list.get(i).set_x(tail_list.get(i).get_x()-1);
+				break;
+			default:
 				break;
 			}
-			last_tail = i;
 		}
-		/* old bad code for reference
-			for (int i = tail_list.size(); i > 0; i++) {
-				if (tail_list.get(i).get_direction() != tail_list.get(i-1).get_direction())
-					tail_list.get(i).set_direction()(Tail_List.get(i-1).get_direction());
+		for (int i = tail_list.size()-1; i > 0; i--) {
+			if (tail_list.get(i).get_direction() != tail_list.get(i-1).get_direction()) {
+				tail_list.get(i).set_direction(tail_list.get(i-1).get_direction());
 			}
-		*/
+		}
 	}
 	/*
 	 * For Competitive GameMode where if a user eats an apple
@@ -177,14 +152,17 @@ public class Snake implements Serializable{
 	public int get_ClientID() {
 		return clientID;
 	}
-	public int get_score() {
+	public int get_SCORE() {
 		return SCORE;
+	}
+	public int get_BOARDSIZE() {
+		return BOARD_SIZE;
 	}
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
 	}
 	public String toString_tail() {
-		return "(" + get_snakeHead().get_x() + "," + get_snakeHead().get_y() + ")" + "Score: " + get_score() + "\n Apple: (" + get_apple_list().get(0).get_x() + get_apple_list().get(0).get_y() + ")";
+		return "(" + get_snakeHead().get_x() + "," + get_snakeHead().get_y() + ")" + "Score: " + get_SCORE() + "\n Apple: (" + get_apple_list().get(0).get_x() + get_apple_list().get(0).get_y() + ")";
 	}
 
 

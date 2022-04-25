@@ -15,8 +15,8 @@ public class Server {
 	 * Snake objects in the array.
 	 */
 	
-	private Snake client_snake = new Snake(0, 9, 1);
-	private Snake client2_snake = new Snake(1, 9, 1);
+	private Snake client_snake = new Snake(0, 9, 3);
+	private Snake client2_snake = new Snake(1, 9, 3);
 	private Snake[] snake_board = {client_snake, client2_snake};
 	
 	private ServerSocket server;
@@ -30,6 +30,7 @@ public class Server {
 	private ObjectOutputStream objectOutput;
 	
 	private ArrayList<Tail> tail_list;
+	private ArrayList<ClientHandler> clinets;
 	private int ClientsConnected = 0;
 	
 	public Server(int PORT) throws IOException, InterruptedException {
@@ -62,6 +63,7 @@ public class Server {
 	 * objectOutput.reset() is used to reset the Object going through the "ObjectOutputStream", which
 	 * in other case cannot change when received in "Client" class.
 	 */
+	
 	public void run(Socket client, DataInputStream dataInput, ObjectOutputStream objectOutput) throws InterruptedException, IOException {
 		Snake user = null;
 		if (this.client == client)
@@ -70,12 +72,45 @@ public class Server {
 			user = snake_board[1];
 		try {
 			while(client.isConnected()) {
-				TimeUnit.MILLISECONDS.sleep(250);
+				TimeUnit.MILLISECONDS.sleep(150);
 				char direction = dataInput.readChar();
 				//Runs all of the logic right here
-				user.get_tail_list().get(0).set_direction(direction);
+				if(user.get_tail_list().size() > 1) {
+					switch(user.get_tail_list().get(0).get_direction()) {
+					case 'w':
+						if (direction == 's')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 's':
+						if (direction == 'w')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 'd':
+						if (direction == 'a')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 'a':
+						if (direction == 'd')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					default:
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					}
+				}
+				else {
+					user.get_tail_list().get(0).set_direction(direction);
+				}
+				// user.get_tail_list().get(0).set_direction(direction);
 				user.move_tails();
-				user.collision_check();
+				//if(user.collision_check()) {
+				//	System.err.println("I hit something :(");
+				//	break;
+				//}
 				user.eaten_apple();
 				//Sends the snake boards to the client to render
 				objectOutput.reset();
@@ -98,6 +133,6 @@ public class Server {
 	}
 	
 	public static void main(String args[]) throws IOException, InterruptedException, ClassNotFoundException {
-		new Server(8080);
+		new Server(25565);
 	}
 }

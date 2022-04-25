@@ -21,12 +21,12 @@ public class Client {
 	
 	private OutputStream direction;
 	private DataOutputStream dataOutput;
-	
 	private WindowManager WM;
 	private Snake[] snake_list;
 	
 	public Client(String IP, int PORT) throws UnknownHostException, IOException, InterruptedException, ClassNotFoundException {
 		//Initializing client server connection
+		
 		Socket client = new Socket(IP, PORT);
 		System.out.println("[Client has Connected]");
 		InputStream snake_stream = client.getInputStream();
@@ -34,11 +34,10 @@ public class Client {
 		
 		OutputStream direction = client.getOutputStream();
 		DataOutputStream dataOutput = new DataOutputStream(direction);
-		
-		WM = new WindowManager(9);
+		WM = new WindowManager(10);
 		try {
 			while(client.isConnected()) {
-				TimeUnit.MILLISECONDS.sleep(250);
+				TimeUnit.MILLISECONDS.sleep(150);
 				//send the input to the server
 				dataOutput.writeChar(WM.get_pressed_key());
 				Object object = objectInput.readObject();
@@ -63,7 +62,7 @@ public class Client {
 	
 
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
-		new Client("localhost", 8080);
+		new Client("localhost", 25565);
 	}
 
    

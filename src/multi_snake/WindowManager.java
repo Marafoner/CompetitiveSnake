@@ -46,7 +46,6 @@ public class WindowManager extends JFrame {
 					@Override
 					public void keyTyped(KeyEvent e) {
 						// TODO Auto-generated method stub
-						
 					}
 
 					@Override
@@ -58,12 +57,11 @@ public class WindowManager extends JFrame {
 					@Override
 					public void keyReleased(KeyEvent e) {
 						// TODO Auto-generated method stub
-						//set_pressed_key(e.getKeyChar());
 						//System.out.println("The key Released was: " + e.getKeyChar());
 					}
 					
 				});
-		graphics = new Timer(30, new ActionListener() {
+		graphics = new Timer(60, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -72,8 +70,8 @@ public class WindowManager extends JFrame {
 			}
 			
 		});
-		setSize(screenWidth, screenHeight);
-	    setLocation(600, 300);
+		setSize(600, 600);
+	    setLocation(300, 150);
 	    setTitle("Snake");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setVisible(true);
@@ -90,18 +88,14 @@ public class WindowManager extends JFrame {
 				GI.drawRect(i*50+50, j*50+50, 50, 50);
 		
 		if(snake_list != null) {
-			GI.drawString("SCORE: " + snake_list[1].get_SCORE(), 500, 500);
+			GI.drawString("SCORE: " + snake_list[1].get_SCORE(), 500, 40);
 			for (int i = 0; i < user_list().size(); i++) {
-				if (i == 0) {
-					GI.setColor(Color.blue);
-					GI.fillRect(user_list().get(0).get_x()*50+50, user_list().get(0).get_y()*50+50, 50, 50);
-				}
-				else {
-					GI.setColor(Color.red);
+					GI.setColor(Color.gray);
 					GI.fillRect(user_list().get(i).get_x()*50+50, user_list().get(i).get_y()*50+50, 50, 50);
 					GI.setColor(Color.black);
-				}
 			}
+			GI.setColor(Color.darkGray);
+			GI.fillRect(user_list().get(0).get_x()*50+50, user_list().get(0).get_y()*50+50, 50, 50);
 			for (int i = 0; i < user_apple_list().size(); i++) {
 				GI.setColor(Color.green);
 				GI.fillRect(user_apple_list().get(i).get_x()*50+50, user_apple_list().get(i).get_y()*50+50, 50, 50);

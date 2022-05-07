@@ -107,10 +107,10 @@ public class Server {
 				}
 				// user.get_tail_list().get(0).set_direction(direction);
 				user.move_tails();
-				//if(user.collision_check()) {
-				//	System.err.println("I hit something :(");
-				//	break;
-				//}
+				if(user.collision_check()) {
+					System.err.println("I hit something :(");
+					break;
+				}
 				user.eaten_apple();
 				//Sends the snake boards to the client to render
 				objectOutput.reset();

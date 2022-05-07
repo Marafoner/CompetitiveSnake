@@ -18,9 +18,8 @@ public class ClientHandler implements Runnable{
 	
 	private Snake[] board;
 	private int id = 0;
-	public ClientHandler(Socket client, Snake[] board, int id) throws IOException {
+	public ClientHandler(Socket client, int id) throws IOException {
 		this.client = client;
-		this.board = board;
 		this.id = id;
 		direction_input = client.getInputStream();
 		dataInput = new DataInputStream(direction_input);

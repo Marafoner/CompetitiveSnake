@@ -1,4 +1,8 @@
-# CompetetiveSnake
-Competetive Snake | Multiplayer Snake game | Java
+# Competetive Snake | Final Project For Comp Sci
+  
+---
 
-Final Project For Comp Sci AB
+A multiplayer Snake game, which allows users to compete and prove
+who is a better snake player.
+
+

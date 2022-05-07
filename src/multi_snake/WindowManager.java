@@ -27,7 +27,7 @@ public class WindowManager extends JFrame {
 	 * "WindowManager" class manages the GUI of the snake game and key inputs.
 	 * 
 	 */
-	private int screenWidth = 800;
+	private int screenWidth = 1200;
 	private int screenHeight = 700;
 	private char pressed_key;
 	private int BOARD_SIZE;
@@ -70,7 +70,7 @@ public class WindowManager extends JFrame {
 			}
 			
 		});
-		setSize(600, 600);
+		setSize(1200, 600);
 	    setLocation(300, 150);
 	    setTitle("Snake");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,21 +84,34 @@ public class WindowManager extends JFrame {
 		GI.fillRect(0, 0, screenWidth, screenHeight);
 		GI.setColor(Color.black);
 		for(int i = 0; i < BOARD_SIZE; i++) 
-			for(int j = 0; j < BOARD_SIZE; j++)
+			for(int j = 0; j < BOARD_SIZE; j++) {
 				GI.drawRect(i*50+50, j*50+50, 50, 50);
+				GI.drawRect(i*50+650, j*50+50, 50, 50);
+			}
 		
 		if(snake_list != null) {
-			GI.drawString("SCORE: " + snake_list[1].get_SCORE(), 500, 40);
+			GI.drawString("SCORE: " + snake_list[0].get_SCORE(), 500, 40);
+			GI.drawString("SCORE: " + snake_list[1].get_SCORE(), 1100, 40);
 			for (int i = 0; i < user_list().size(); i++) {
 					GI.setColor(Color.gray);
 					GI.fillRect(user_list().get(i).get_x()*50+50, user_list().get(i).get_y()*50+50, 50, 50);
 					GI.setColor(Color.black);
 			}
+			for (int i = 0; i < opponent_list().size(); i++) {
+				GI.setColor(Color.gray);
+				GI.fillRect(opponent_list().get(i).get_x()*50+650, opponent_list().get(i).get_y()*50+50, 50, 50);
+				GI.setColor(Color.black);
+			}
 			GI.setColor(Color.darkGray);
 			GI.fillRect(user_list().get(0).get_x()*50+50, user_list().get(0).get_y()*50+50, 50, 50);
+			GI.fillRect(opponent_list().get(0).get_x()*50+650, opponent_list().get(0).get_y()*50+50, 50, 50);
 			for (int i = 0; i < user_apple_list().size(); i++) {
 				GI.setColor(Color.green);
 				GI.fillRect(user_apple_list().get(i).get_x()*50+50, user_apple_list().get(i).get_y()*50+50, 50, 50);
+			}
+			for (int i = 0; i < opponent_apple_list().size(); i++) {
+				GI.setColor(Color.green);
+				GI.fillRect(opponent_apple_list().get(i).get_x()*50+650, opponent_apple_list().get(i).get_y()*50+50, 50, 50);
 			}
 		}
 		g.drawImage(BI, 0, 0, null);
@@ -111,13 +124,16 @@ public class WindowManager extends JFrame {
 		return pressed_key;
 	}
 	public ArrayList<Tail> user_list() {
-		return snake_list[1].get_tail_list(); // <-- CHANGE IT TO 0 WHEN MAKE IT WORK
+		return snake_list[0].get_tail_list(); // <-- CHANGE IT TO 0 WHEN MAKE IT WORK
 	}
 	public ArrayList<Apple> user_apple_list() {
-		return snake_list[1].get_apple_list();
+		return snake_list[0].get_apple_list();
 	}
 	public ArrayList<Tail> opponent_list() {
-		return snake_list[0].get_tail_list(); // <--- CHANGE IT TO 1 WHEN MAKE SERVER WORK MULTI THREADING
+		return snake_list[1].get_tail_list(); // <--- CHANGE IT TO 1 WHEN MAKE SERVER WORK MULTI THREADING
+	}
+	public ArrayList<Apple> opponent_apple_list() {
+		return snake_list[1].get_apple_list();
 	}
 	public void set_snake_list(Snake[] snake_list) {
 		this.snake_list = snake_list;

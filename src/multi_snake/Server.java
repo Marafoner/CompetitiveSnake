@@ -15,8 +15,8 @@ public class Server {
 	 * Snake objects in the array.
 	 */
 	
-	private Snake client_snake = new Snake(0, 9, 3);
-	private Snake client2_snake = new Snake(1, 9, 3);
+	private Snake client_snake = new Snake(0, 9, 1);
+	private Snake client2_snake = new Snake(1, 9, 1);
 	private Snake[] snake_board = {client_snake, client2_snake};
 	
 	private ServerSocket server;
@@ -65,11 +65,8 @@ public class Server {
 	 */
 	
 	public void run(Socket client, DataInputStream dataInput, ObjectOutputStream objectOutput) throws InterruptedException, IOException {
-		Snake user = null;
-		if (this.client == client)
-			user = snake_board[0];
-		else
-			user = snake_board[1];
+		Snake user = snake_board[0];
+
 		try {
 			while(client.isConnected()) {
 				TimeUnit.MILLISECONDS.sleep(150);

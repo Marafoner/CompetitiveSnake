@@ -38,6 +38,19 @@ public class Apple implements Serializable{
 			if (x == element.get_x() && y == element.get_y())
 				spawn_apple(tail_list, apple_list, board_size, index);
 		}
+		/*
+		for (Apple element : apple_list) {
+			if (x == element.get_x() && y == element.get_y() && element.get_index() == index)
+				spawn_apple(tail_list, apple_list, board_size, index);
+		}
+		
+		for (int i = 0; i < apple_list.size(); i++) {
+			if (i != index)
+				if (x == apple_list.get(i).get_x() && y == apple_list.get(i).get_y())
+					spawn_apple(tail_list, apple_list, board_size, index);
+		}
+		*/
+		
 	}
 	
 }

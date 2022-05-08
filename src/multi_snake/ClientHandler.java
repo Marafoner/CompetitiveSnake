@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class ClientHandler implements Runnable{
@@ -15,12 +16,14 @@ public class ClientHandler implements Runnable{
 	private DataInputStream dataInput;
 	private OutputStream snake_stream;
 	private ObjectOutputStream objectOutput;
-	private Snake[] board;
+	private Snake user_board = new Snake(0, 9, 1);
+	private ArrayList<ClientHandler> clients;
+	private Snake[] snake_board = {null, user_board};
 	private int id; //ID of the board we send input for
-	public ClientHandler(Socket client, int id) throws IOException {
+	public ClientHandler(Socket client, int id, ArrayList<ClientHandler> clients) throws IOException {
 		this.client = client;
 		this.id = id;
-		
+		this.clients = clients;
 		//Setting Up Input OutPut streams the moment the ClientHandlers are Declared
 		this.direction_input = client.getInputStream();
 		this.dataInput = new DataInputStream(direction_input);
@@ -28,12 +31,87 @@ public class ClientHandler implements Runnable{
 		this.objectOutput = new ObjectOutputStream(snake_stream);
 		
 	}
-	@Override
+	/*
+	 * @method "run" is used to thread a while loop, which sends and receives
+	 * KeyInput and a "Snake" object which contains two different boards for
+	 * clients to visualize. It's needed to insure that all of the information
+	 * is sent at the same time. 
+	 * 
+	 * objectOutput.reset() is used to reset the Object going through the "ObjectOutputStream", which
+	 * in other case cannot change when received in "Client" class.
+	 */
 	public void run(){
 		// run stuff here i guess
-		
-		System.err.println("code here pls");
-		return;
+		Snake user = user_board;
+		try {
+			while(client.isConnected()) {
+				TimeUnit.MILLISECONDS.sleep(150);
+				char direction = dataInput.readChar();
+				//Runs all of the logic right here
+				if(user.get_tail_list().size() > 1) {
+					switch(user.get_tail_list().get(0).get_direction()) {
+					case 'w':
+						if (direction == 's')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 's':
+						if (direction == 'w')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 'd':
+						if (direction == 'a')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					case 'a':
+						if (direction == 'd')
+							break;
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					default:
+						user.get_tail_list().get(0).set_direction(direction);
+						break;
+					}
+				}
+				else {
+					user.get_tail_list().get(0).set_direction(direction);
+				}
+				// user.get_tail_list().get(0).set_direction(direction);
+				user.move_tails();
+				if(user.collision_check()) {
+					System.err.println("I hit something :(");
+					break;
+				}
+				user.eaten_apple();
+				//Sends the snake boards to the client to render
+				snake_board[id] = user;
+				for (ClientHandler element : clients) {
+					element.set_boards(snake_board[id], id);
+				}
+				objectOutput.reset();
+				objectOutput.writeObject(snake_board);
+			}
+		} catch (IOException | InterruptedException e) {
+			try {
+				objectOutput.flush();
+				objectOutput.close();
+				client.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.err.println("Client Crashed :(");
+			e.printStackTrace();
+		}
 	}
 
+	public Snake[] get_boards() {
+		return snake_board;
+	}
+	public void set_boards(Snake board, int id) {
+		snake_board[id] = board;
+	}
+	
 }

@@ -42,7 +42,7 @@ public class Server {
 			System.out.println("[Server has started]");
 			Socket client = server.accept();
 			System.out.println("[Client #" + (ClientsConnected+1) + " has Connected]:"+ get_ip(client));
-			clients.add(new ClientHandler(client, ClientsConnected));
+			clients.add(new ClientHandler(client, ClientsConnected, clients));
 			ClientsConnected++;
 		}
 		//Activate the Client Handlers
@@ -50,7 +50,7 @@ public class Server {
 			USER_LIMIT.execute(element);
 		}
 		
-		USER_LIMIT.shutdownNow();
+		//USER_LIMIT.shutdownNow();
 		//Socket client = server.accept();
 		//System.out.println("[Client has Connected]:"+ get_ip(client));
 		//Initializing Output and Input Streams to communicate with clients

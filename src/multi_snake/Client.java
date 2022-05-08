@@ -35,7 +35,7 @@ public class Client {
 		OutputStream direction = client.getOutputStream();
 		DataOutputStream dataOutput = new DataOutputStream(direction);
 		WM = new WindowManager(10);
-		/*
+		
 		try {
 			while(client.isConnected()) {
 				TimeUnit.MILLISECONDS.sleep(150);
@@ -57,13 +57,11 @@ public class Client {
 		dataOutput.close();
 		client.close();
 	}
-	*/
-		dataOutput.flush();
-		dataOutput.close();
-		client.close();
-	}
+	
+		
+	
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
-		new WindowManager(10);
+		//new WindowManager(10);
 		new Client("localhost", 25565);
 	}
 

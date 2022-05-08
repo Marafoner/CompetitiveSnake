@@ -3,6 +3,8 @@ package multi_snake;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
@@ -20,8 +22,6 @@ public class Server {
 	private Snake[] snake_board = {client_snake, client2_snake};
 	
 	private ServerSocket server;
-	private Socket client;
-	private Socket client2;
 	
 	private InputStream direction_input;
 	private DataInputStream dataInput;
@@ -30,28 +30,47 @@ public class Server {
 	private ObjectOutputStream objectOutput;
 	
 	private ArrayList<Tail> tail_list;
-	private ArrayList<ClientHandler> clinets;
+	private ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
+	private ExecutorService USER_LIMIT = Executors.newFixedThreadPool(2); //Only two Client Threads can run when the server runs, preventing more unnecessary connections
 	private int ClientsConnected = 0;
 	
 	public Server(int PORT) throws IOException, InterruptedException {
 		//Initializing Server and client connections
 		ServerSocket server = new ServerSocket(PORT);
-		System.out.println("[Server has started]");
-		Socket client = server.accept();
+		//Waiting for Both Clients to Connect
+		while (ClientsConnected != 2) {
+			System.out.println("[Server has started]");
+			Socket client = server.accept();
+			System.out.println("[Client #" + (ClientsConnected+1) + " has Connected]:"+ get_ip(client));
+			clients.add(new ClientHandler(client, ClientsConnected));
+			ClientsConnected++;
+		}
+		//Activate the Client Handlers
+		for (ClientHandler element : clients) {
+			USER_LIMIT.execute(element);
+		}
+		
+		USER_LIMIT.shutdownNow();
 		//Socket client = server.accept();
-		System.out.println("[Client has Connected]:"+ get_ip(client));
+		//System.out.println("[Client has Connected]:"+ get_ip(client));
 		//Initializing Output and Input Streams to communicate with clients
+		/*
 		InputStream direction_input = client.getInputStream();
 		DataInputStream dataInput = new DataInputStream(direction_input);
 		
 		OutputStream snake_stream = client.getOutputStream();
 		ObjectOutputStream objectOutput = new ObjectOutputStream(snake_stream);
 		
-		run(client, dataInput, objectOutput);
+		
+		
+		//run(client, dataInput, objectOutput);
 		
 		objectOutput.close();
 		client.close();
 		server.close();
+		*/
+		
+		
 	}
 	
 	/*
@@ -128,7 +147,9 @@ public class Server {
 	public String get_ip(Socket client) {
 		return client.getRemoteSocketAddress().toString().replace("/", "");
 	}
-	
+	public Snake[] get_board() {
+		return snake_board;
+	}
 	public static void main(String args[]) throws IOException, InterruptedException, ClassNotFoundException {
 		new Server(25565);
 	}

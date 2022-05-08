@@ -15,82 +15,25 @@ public class ClientHandler implements Runnable{
 	private DataInputStream dataInput;
 	private OutputStream snake_stream;
 	private ObjectOutputStream objectOutput;
-	
 	private Snake[] board;
-	private int id = 0;
+	private int id; //ID of the board we send input for
 	public ClientHandler(Socket client, int id) throws IOException {
 		this.client = client;
 		this.id = id;
-		direction_input = client.getInputStream();
-		dataInput = new DataInputStream(direction_input);
-		snake_stream = client.getOutputStream();
-		objectOutput = new ObjectOutputStream(snake_stream);
+		
+		//Setting Up Input OutPut streams the moment the ClientHandlers are Declared
+		this.direction_input = client.getInputStream();
+		this.dataInput = new DataInputStream(direction_input);
+		this.snake_stream = client.getOutputStream();
+		this.objectOutput = new ObjectOutputStream(snake_stream);
+		
 	}
 	@Override
 	public void run(){
 		// run stuff here i guess
 		
-		try {
-			while(client.isConnected()) {
-				TimeUnit.MILLISECONDS.sleep(250);
-				char direction = dataInput.readChar();
-				//Runs all of the logic right here
-				if(board[id].get_tail_list().size() > 1) {
-					switch(board[id].get_tail_list().get(0).get_direction()) {
-					case 'w':
-						if (direction == 's')
-							break;
-						board[id].get_tail_list().get(0).set_direction(direction);
-						break;
-					case 's':
-						if (direction == 'w')
-							break;
-						board[id].get_tail_list().get(0).set_direction(direction);
-						break;
-					case 'd':
-						if (direction == 'a')
-							break;
-						board[id].get_tail_list().get(0).set_direction(direction);
-						break;
-					case 'a':
-						if (direction == 'd')
-							break;
-						board[id].get_tail_list().get(0).set_direction(direction);
-						break;
-					default:
-						board[id].get_tail_list().get(0).set_direction(direction);
-						break;
-					}
-				}
-				else {
-					board[id].get_tail_list().get(0).set_direction(direction);
-				}
-				// user.get_tail_list().get(0).set_direction(direction);
-				board[id].move_tails();
-				if(board[id].collision_check()) {
-					System.err.println("I hit something :(");
-					break;
-				}
-				board[id].eaten_apple();
-				//Sends the snake boards to the client to render
-				objectOutput.reset();
-				objectOutput.writeObject(board);
-			}
-		} catch (IOException e) {
-			System.err.println("Client Crashed :(");
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				objectOutput.flush();
-				objectOutput.close();
-				client.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		System.err.println("code here pls");
+		return;
 	}
 
 }

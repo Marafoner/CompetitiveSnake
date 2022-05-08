@@ -35,6 +35,7 @@ public class Client {
 		OutputStream direction = client.getOutputStream();
 		DataOutputStream dataOutput = new DataOutputStream(direction);
 		WM = new WindowManager(10);
+		/*
 		try {
 			while(client.isConnected()) {
 				TimeUnit.MILLISECONDS.sleep(150);
@@ -49,20 +50,20 @@ public class Client {
 			dataOutput.flush();
 			dataOutput.close();
 			client.close();
-			System.err.println("Server crashed :( \nTail List");
-			for (int i = 0; i < snake_list[1].get_tail_list().size(); i++) {
-				System.out.print(snake_list[0].get_tail_list().get(i).toString() + ",");
-			}
+			System.err.println("Server crashed :(");
 			e.printStackTrace();
 		}
 		dataOutput.flush();
 		dataOutput.close();
 		client.close();
 	}
-	
-
+	*/
+		dataOutput.flush();
+		dataOutput.close();
+		client.close();
+	}
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
-		//new WindowManager(10);
+		new WindowManager(10);
 		new Client("localhost", 25565);
 	}
 

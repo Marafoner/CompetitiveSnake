@@ -11,19 +11,21 @@ public class Button {
     private int ButtonBorderSize;
     private String ButtonText;
     private String ButtonColor;
-    
+    private boolean ButtonActive;
     Button(int ButtonWidth, int ButtonHeight, String ButtonText, String Button_Color) {
         this.ButtonWidth = ButtonWidth;
         this.ButtonHeight = ButtonHeight;
         this.ButtonText = ButtonText;
-        this.Button_Color = Button_Color;
+        this.ButtonColor = Button_Color;
+        this.ButtonActive = false;
     }
     Button(int ButtonWidth, int ButtonHeight, int ButtonBorderSize, String ButtonText, String Button_Color) {
         this.ButtonWidth = ButtonWidth;
         this.ButtonHeight = ButtonHeight;
         this.ButtonBorderSize = ButtonBorderSize;
         this.ButtonText = ButtonText;
-        this.Button_Color = Button_Color;
+        this.ButtonColor = Button_Color;
+        this.ButtonActive = false;
     }
 
     public int get_Width() {
@@ -41,19 +43,25 @@ public class Button {
     public char get_Color() {
         return Button_Color;
     }
-    public int set_Width(int ButtonWidth) {
+    public void set_Width(int ButtonWidth) {
         this.ButtonWidth = ButtonWidth;
     }
-    public int set_Height(int ButtonHeight) {
+    public void set_Height(int ButtonHeight) {
         this.ButtonHeight = ButtonHeight;
     }
-    public int set_BorderSize(int ButtonBorderSize) {
+    public void set_BorderSize(int ButtonBorderSize) {
         this.ButtonBorderSize = ButtonBorderSize;
     }
-    public String set_Text(String ButtonText) {
+    public void set_Text(String ButtonText) {
         this.ButtonText = ButtonText;
     }
-    public String set_Color(String ButtonColor) {
+    public void set_Color(String ButtonColor) {
         this.ButtonColor = ButtonColor;
+    }
+    public boolean get_Active() {
+        return this.ButtonActive;
+    }
+    public void switch_Active() {
+        this.ButtonActive = !this.ButtonActive;
     }
 }

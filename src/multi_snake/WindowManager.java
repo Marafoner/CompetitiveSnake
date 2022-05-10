@@ -61,8 +61,6 @@ public class WindowManager extends JFrame {
 					public void keyPressed(KeyEvent e) {
 						// TODO Auto-generated method stub
 						set_pressed_key(e.getKeyChar());
-						if(e.getKeyCode() == 61440)
-							debugInfo = !debugInfo;
 					}
 
 					@Override
@@ -72,6 +70,15 @@ public class WindowManager extends JFrame {
 					}
 					
 				});
+
+		//Looking at the mouse
+		addMouseListener(
+			new MouserListener() {
+				mousePressed() {
+
+				}
+			}
+		)
 		graphics = new Timer(60, new ActionListener() {
 
 			@Override

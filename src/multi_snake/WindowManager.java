@@ -27,12 +27,20 @@ public class WindowManager extends JFrame {
 	 * "WindowManager" class manages the GUI of the snake game and key inputs.
 	 * 
 	 */
-	private boolean debugInfo = false;
 	private int screenWidth = 1200;
 	private int screenHeight = 700;
 	private char pressed_key;
 	private int BOARD_SIZE;
 	private Snake[] snake_list;
+	//Flags for Buttons
+	/*
+	* "main" is the main menu flag for method "paint" to draw
+	* "host" is the host menu flag for method "paint" to draw
+	* "join" is the join menu flag for method "paint" to draw
+	* "game" is the game flag for method "paint" to draw
+	*/
+	private boolean main, host, join, game = false;
+	private ArrayList<Button> button_list = new ArrayList<Button>();
 	BufferedImage BI = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
 	Graphics GI = BI.createGraphics();
 	

@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 public class Snake implements Serializable{
+	
 	/*
 	 * @param serialVersionUID is needed in order to serialize a class in order to
 	 * create a Snake object and send it and receive it successfully.
@@ -10,21 +11,21 @@ public class Snake implements Serializable{
 	 * "Snake" class manages the game logic and allows to host two different boards for
 	 * two different clients using Snake[].
 	 */
+	
 	private static final long serialVersionUID = 1L;
-
 	private int clientID;
 	private int SCORE;
 	private int MAX_SCORE;
 	private int SNAKE_SIZE = 0;
 	private int BOARD_SIZE;
-	@SuppressWarnings("unused")
 	private int APPLE_COUNT;
+	private boolean defeat = false;
 	private ArrayList<Tail> tail_list = new ArrayList<Tail>();
 	private ArrayList<Apple> apple_list = new ArrayList<Apple>();
 	
 	Snake(int clientID, int BOARD_SIZE, int APPLE_COUNT) {
 		//Checking the legitimacy of the inputed values
-		if (BOARD_SIZE < 4) {
+		if (BOARD_SIZE <= 4) {
 			System.err.println("Board size is too small! | Setting it to DEFAULT value of 7");
 			//Default Value of the snake Size
 			this.BOARD_SIZE = 7;
@@ -32,9 +33,9 @@ public class Snake implements Serializable{
 		else
 			this.BOARD_SIZE = BOARD_SIZE;
 		if (APPLE_COUNT <= 0)
-			this.APPLE_COUNT = 1;
+			this.set_APPLE_COUNT(1);
 		else
-			this.APPLE_COUNT = APPLE_COUNT;
+			this.set_APPLE_COUNT(APPLE_COUNT);
 		this.MAX_SCORE = BOARD_SIZE-SNAKE_SIZE-APPLE_COUNT;
 		this.clientID = clientID;
 		//populating
@@ -58,7 +59,7 @@ public class Snake implements Serializable{
 		case 'd':
 			return new Tail(get_lastTail().get_x()-1, get_lastTail().get_y(), get_lastTail().get_direction());
 		default:
-			return new Tail(get_lastTail().get_x()-1, get_lastTail().get_y(), get_lastTail().get_direction());
+			return new Tail(get_lastTail().get_x(), get_lastTail().get_y(), get_lastTail().get_direction());
 		}
 	}
 	public void add_tail(Tail tail) {
@@ -70,6 +71,7 @@ public class Snake implements Serializable{
 	 * I will do it later due to I need it to work to make sure GUI renders everything properly
 	 * As well as I need it to just barely function right now, which it does.
 	 */
+	
 	public void move_tails() {
 		for (int i = 0; i < tail_list.size(); i++) {
 			switch(tail_list.get(i).get_direction()) {
@@ -95,14 +97,17 @@ public class Snake implements Serializable{
 			}
 		}
 	}
+	
 	/*
 	 * For Competitive GameMode where if a user eats an apple
 	 * then their opponent's snake will increase in size and vice versa.
 	 */
+	
 	public void increase_size(boolean opponent_apple_eaten) {
 		if(opponent_apple_eaten) 
 			add_tail(create_tail());
 	}
+	
 	public boolean eaten_apple() {
 		for (Apple element : apple_list) {
 			Apple current_apple = element;
@@ -156,12 +161,17 @@ public class Snake implements Serializable{
 	public int get_BOARDSIZE() {
 		return BOARD_SIZE;
 	}
+	public int get_APPLE_COUNT() {
+		return APPLE_COUNT;
+	}
+	public void set_APPLE_COUNT(int APPLE_COUNT) {
+		this.APPLE_COUNT = APPLE_COUNT;
+	}
+
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
 	}
 	public String toString_tail() {
 		return "(" + get_snakeHead().get_x() + "," + get_snakeHead().get_y() + ")" + "Score: " + get_SCORE() + "\n Apple: (" + get_apple_list().get(0).get_x() + get_apple_list().get(0).get_y() + ")";
 	}
-
-
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class ClientHandler implements Runnable{
-	@SuppressWarnings("unused")
+	
 	private Socket client;
 	private InputStream direction_input;
 	private DataInputStream dataInput;
@@ -18,8 +18,9 @@ public class ClientHandler implements Runnable{
 	private ObjectOutputStream objectOutput;
 	private Snake user_board = new Snake(0, 9, 1);
 	private ArrayList<ClientHandler> clients;
-	private Snake[] snake_board = {null, user_board};
+	private Snake[] snake_board = {user_board, user_board};
 	private int id; //ID of the board we send input for
+	
 	public ClientHandler(Socket client, int id, ArrayList<ClientHandler> clients) throws IOException {
 		this.client = client;
 		this.id = id;
@@ -29,8 +30,8 @@ public class ClientHandler implements Runnable{
 		this.dataInput = new DataInputStream(direction_input);
 		this.snake_stream = client.getOutputStream();
 		this.objectOutput = new ObjectOutputStream(snake_stream);
-		
 	}
+	
 	/*
 	 * @method "run" is used to thread a while loop, which sends and receives
 	 * KeyInput and a "Snake" object which contains two different boards for
@@ -40,12 +41,13 @@ public class ClientHandler implements Runnable{
 	 * objectOutput.reset() is used to reset the Object going through the "ObjectOutputStream", which
 	 * in other case cannot change when received in "Client" class.
 	 */
+	
 	public void run(){
 		// run stuff here i guess
 		Snake user = user_board;
 		try {
 			while(client.isConnected()) {
-				TimeUnit.MILLISECONDS.sleep(150);
+				TimeUnit.MILLISECONDS.sleep(100);
 				char direction = dataInput.readChar();
 				//Runs all of the logic right here
 				if(user.get_tail_list().size() > 1) {
@@ -79,12 +81,12 @@ public class ClientHandler implements Runnable{
 					user.get_tail_list().get(0).set_direction(direction);
 				}
 				// user.get_tail_list().get(0).set_direction(direction);
+				user.eaten_apple();
 				user.move_tails();
 				if(user.collision_check()) {
 					System.err.println("I hit something :(");
 					break;
 				}
-				user.eaten_apple();
 				//Sends the snake boards to the client to render
 				snake_board[id] = user;
 				for (ClientHandler element : clients) {
@@ -109,6 +111,12 @@ public class ClientHandler implements Runnable{
 
 	public Snake[] get_boards() {
 		return snake_board;
+	}
+	public Snake get_board() {
+		return user_board;
+	}
+	public int get_id() {
+		return id;
 	}
 	public void set_boards(Snake board, int id) {
 		snake_board[id] = board;

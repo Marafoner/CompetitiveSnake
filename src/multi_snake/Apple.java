@@ -14,6 +14,7 @@ public class Apple implements Serializable{
 	 * through iterating across the "tail_list" and checking Tail Object coordinates
 	 * using getters of the Tail class.
 	 */
+	
 	private static final long serialVersionUID = 2L;
 	private int x, y, index;
 	

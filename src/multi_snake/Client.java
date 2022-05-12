@@ -59,7 +59,7 @@ public class Client {
 	}
 	
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
-		new WindowManager(10);
-		//new Client("localhost", 25565);
+		//new WindowManager(10);
+		new Client("localhost", 25565);
 	}   
 }

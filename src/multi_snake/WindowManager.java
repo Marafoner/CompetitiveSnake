@@ -2,12 +2,18 @@ package multi_snake;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javax.swing.Timer;
 
@@ -18,7 +24,7 @@ public class WindowManager extends JFrame {
 	 * "WindowManager" class manages the GUI of the snake game and key inputs.
 	 * 
 	 */
-
+	private int mouseX, mouseY;
 	private int screenWidth = 1200;
 	private int screenHeight = 700;
 	private char pressed_key;
@@ -32,6 +38,7 @@ public class WindowManager extends JFrame {
 	* "game" is the game flag for method "paint" to draw
 	*/
 	private boolean main, host, join, game = false;
+	private Button HOST = new Button(400, 500, "HOST");
 	private ArrayList<Button> button_list = new ArrayList<Button>();
 	BufferedImage BI = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
 	Graphics GI = BI.createGraphics();
@@ -39,6 +46,7 @@ public class WindowManager extends JFrame {
 	Timer graphics;
 	
 	WindowManager(int BOARD_SIZE) {
+		game = true;
 		this.BOARD_SIZE = BOARD_SIZE;
 		addKeyListener(
 				new KeyListener() {
@@ -52,6 +60,23 @@ public class WindowManager extends JFrame {
 					public void keyPressed(KeyEvent e) {
 						// TODO Auto-generated method stub
 						set_pressed_key(e.getKeyChar());
+						if (e.getKeyChar() == 'l') {
+							try {
+								new Client("localhost", 25565);
+							} catch (UnknownHostException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 					}
 
 					@Override
@@ -61,11 +86,69 @@ public class WindowManager extends JFrame {
 					}
 					
 				});
+		addMouseListener( 
+				new MouseListener() {
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+		
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height())) {
+					
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height())) {
+					
+					System.err.print("clicked ");
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// TODO Auto-generated method stub
+				mouseX = e.getX();
+				mouseY = e.getY();
+				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height())) {
+					HOST.set_y(mouseY-40);
+					HOST.set_x(mouseX-40);
+				}
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+				mouseX = e.getX();
+				mouseY = e.getY();
+			}
+			
+		});
 		
 		//Looking at the mouse
 		
-		graphics = new Timer(60, new ActionListener() {
+		graphics = new Timer(30, new ActionListener() {
 
 
 			@Override
@@ -88,13 +171,18 @@ public class WindowManager extends JFrame {
 		GI.setColor(Color.WHITE);
 		GI.fillRect(0, 0, screenWidth, screenHeight);
 		GI.setColor(Color.black);
-		setTitle("Snake");
+		GI.fillRect(mouseX, mouseY, 30, 30);
+		GI.drawString("(" + mouseX + "," + mouseY + ")", 30, 50);
 		//Waiting Menu for the Game to begin
-		if(snake_list == null) {
+		if (!main) {
+			GI.setColor(Color.green);
+			GI.fillRect(HOST.get_x(), HOST.get_y(), HOST.get_Width(), HOST.get_Height());
+		}
+		if(snake_list == null && game) {
 			GI.drawString("Waiting for another Client to Connect...", screenWidth/2-100, screenHeight/2);
 		}
 		//Rendering Snakes
-		else {
+		else if (snake_list != null && game) {
 			GI.drawString("SCORE: " + snake_list[0].get_SCORE(), 500, 40);
 			GI.drawString("SCORE: " + snake_list[1].get_SCORE(), 1100, 40);
 			//Drawing a Girded Board
@@ -131,7 +219,16 @@ public class WindowManager extends JFrame {
 		}
 		g.drawImage(BI, 0, 0, null);
 	}
-	
+	private void draw_button() {
+		for (Button button : button_list) {
+			if (button.get_Active()) {
+				GI.setColor(Color.red);
+				GI.fillRect(button.get_x(), button.get_y(), button.get_Width(), button.get_Height());
+				GI.setColor(Color.WHITE);
+				GI.drawString(button.get_Text(), button.get_x()+button.get_Width()/2, button.get_y()+button.get_Height()/2);
+			}
+		}
+	}
 	public void set_pressed_key(char pressend_key) {
 		this.pressed_key = pressend_key;
 	}

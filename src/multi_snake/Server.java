@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 //added a comment
-public class Server {
+public class Server implements Runnable{
 	
 	/*
 	 * "Server" class is managing all of the logic through using Snake class,
@@ -17,7 +17,7 @@ public class Server {
 	 * visualizes all of the boards through using an ArrayList<Tail> of both
 	 * Snake objects in the array.
 	 */
-	
+	private int PORT;
 	private ServerSocket server;
 	private ArrayList<Tail> tail_list;
 	private ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
@@ -47,7 +47,17 @@ public class Server {
 		return client.getRemoteSocketAddress().toString().replace("/", "");
 	}
 
-	public static void main(String args[]) throws IOException, InterruptedException, ClassNotFoundException {
-		new Server(25565);
+
+	public void run() {
+		// TODO Auto-generated method stub
+		try {
+			new Server(PORT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

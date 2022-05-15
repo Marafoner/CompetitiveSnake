@@ -22,6 +22,11 @@ public class Button {
     	this.ButtonActive = true;
     	this.ButtonColor = "GREEN";
     }
+    Button(int x, int y, int ButtonBorderSize) {
+    	this.x = x;
+    	this.y = y;
+    	this.ButtonBorderSize = ButtonBorderSize;
+    }
     Button(int ButtonWidth, int ButtonHeight, String ButtonText, String Button_Color) {
         this.ButtonWidth = ButtonWidth;
         this.ButtonHeight = ButtonHeight;

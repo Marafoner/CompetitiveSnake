@@ -39,7 +39,4 @@ public class Tail implements Serializable{
 	public void set_direction(char direction) {
 		this.direction = direction;
 	}
-	public String toString() {
-		return "(" + get_x() + "," + get_y() + ")" + get_direction();
-	}
 }

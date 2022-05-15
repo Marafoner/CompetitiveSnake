@@ -15,7 +15,7 @@ public class Client {
 	 * sent using "DataOutputStream" as char type to the server to modify the direction of the
 	 * snake, which are sent back by the server.
 	 */
-	private boolean stop_clinet;
+	private boolean Client_Connected = false;
 	private Socket client;
 	private InputStream snake_stream;
 	private ObjectInputStream objectInput;
@@ -31,6 +31,7 @@ public class Client {
 		this.WM = WM;
 		TimeUnit.MILLISECONDS.sleep(700);
 		Socket client = new Socket(IP, PORT);
+		Client_Connected = client.isConnected();
 		System.out.println("[Client has Connected]");
 		InputStream snake_stream = client.getInputStream();
 		ObjectInputStream objectInput = new ObjectInputStream(snake_stream);
@@ -39,7 +40,7 @@ public class Client {
 		
 		try {
 		
-			while(client.isConnected() && !stop_clinet) {
+			while(client.isConnected()) {
 				TimeUnit.MILLISECONDS.sleep(100);
 				//send the input to the server
 				dataOutput.writeChar(WM.get_pressed_key());
@@ -61,7 +62,9 @@ public class Client {
 			client.close();
 		}
 	}
-	
+	public boolean get_client_connected() {
+		return Client_Connected;
+	}
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
 		new WindowManager(10);
 		//new Client("localhost", 25565, new WindowManager(0));

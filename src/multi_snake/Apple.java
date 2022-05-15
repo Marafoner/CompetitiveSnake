@@ -34,12 +34,6 @@ public class Apple implements Serializable{
 	public void spawn_apple(ArrayList<Tail> tail_list, ArrayList<Apple> apple_list, int board_size, int index) {
 		x = (int) ((Math.random() * (board_size)));
 		y = (int) ((Math.random() * (board_size)));
-		/*
-		for (Tail element : tail_list) {
-			if (x == element.get_x() && y == element.get_y())
-				spawn_apple(tail_list, apple_list, board_size, index);
-		}
-		*/
 		for (Apple apple : apple_list) {
 			for (Tail tail : tail_list) {
 				if ((x == tail.get_x() && y == tail.get_y()) || (x == apple.get_x() && x == apple.get_y() && apple.get_index() != index))

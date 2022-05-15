@@ -17,7 +17,7 @@ public class ClientHandler implements Runnable{
 	private DataInputStream dataInput;
 	private OutputStream snake_stream;
 	private ObjectOutputStream objectOutput;
-	private Snake user_board = new Snake(0, 9, 1);
+	private Snake user_board = new Snake(0, 9, 3);
 	private ArrayList<ClientHandler> clients;
 	private Snake[] snake_board = {user_board, user_board};
 	private int id; //ID of the board we send input for

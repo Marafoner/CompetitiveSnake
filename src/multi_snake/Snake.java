@@ -19,7 +19,7 @@ public class Snake implements Serializable{
 	private int SNAKE_SIZE = 0;
 	private int BOARD_SIZE;
 	private int APPLE_COUNT;
-	private boolean defeat = false;
+	//private boolean defeat = false;
 	private ArrayList<Tail> tail_list = new ArrayList<Tail>();
 	private ArrayList<Apple> apple_list = new ArrayList<Apple>();
 	
@@ -133,7 +133,6 @@ public class Snake implements Serializable{
 		//Tail Collision
 		for (int i = 1; i < tail_list.size(); i++) {
 			if (get_snakeHead().get_x() == tail_list.get(i).get_x() && get_snakeHead().get_y() == tail_list.get(i).get_y()) {
-				//System.err.println("I collided with tail somehow? :(");
 				return true;
 			}
 		}

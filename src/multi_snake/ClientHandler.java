@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientHandler implements Runnable{
 	
+	private boolean StopThread = false;
 	private Socket client;
 	private InputStream direction_input;
 	private DataInputStream dataInput;
@@ -46,7 +47,7 @@ public class ClientHandler implements Runnable{
 		// run stuff here i guess
 		Snake user = user_board;
 		try {
-			while(client.isConnected()) {
+			while(client.isConnected() && !StopThread) {
 				TimeUnit.MILLISECONDS.sleep(100);
 				char direction = dataInput.readChar();
 				//Runs all of the logic right here
@@ -85,6 +86,7 @@ public class ClientHandler implements Runnable{
 				user.move_tails();
 				if(user.collision_check()) {
 					System.err.println("I hit something :(");
+					//StopThread = !StopThread;
 					break;
 				}
 				//Sends the snake boards to the client to render
@@ -96,16 +98,16 @@ public class ClientHandler implements Runnable{
 				objectOutput.writeObject(snake_board);
 			}
 		} catch (IOException | InterruptedException e) {
+			System.err.println("Client Crashed :(");
+			e.printStackTrace();
+		} finally {
 			try {
 				objectOutput.flush();
 				objectOutput.close();
 				client.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			System.err.println("Client Crashed :(");
-			e.printStackTrace();
 		}
 	}
 
@@ -120,6 +122,9 @@ public class ClientHandler implements Runnable{
 	}
 	public void set_boards(Snake board, int id) {
 		snake_board[id] = board;
+	}
+	public boolean get_StopThread() {
+		return StopThread;
 	}
 	
 }

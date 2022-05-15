@@ -5,7 +5,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import javax.swing.Timer;
 
@@ -27,18 +32,28 @@ public class WindowManager extends JFrame {
 	 * "WindowManager" class manages the GUI of the snake game and key inputs.
 	 * 
 	 */
-	private boolean debug = false;
+	private String ip = "";
+	private boolean debug = true;
 	private int mouseX, mouseY;
 	private int screenWidth = 1200;
 	private int screenHeight = 700;
 	private char pressed_key;
 	private int BOARD_SIZE;
-	private Snake[] snake_list;
+	private Snake[] snake_list = null;
 	//IPV4 for GUI to show for connection
-	private InetAddress myipv4;
-	private String IPV4;
+	private ExecutorService SOCKET_LIMIT = Executors.newFixedThreadPool(2);
+	private Client Client;
+	private Server Server;
+	private Thread TServer;
+	private Thread TClient;
+	private String MYIPV4;
+	private String IPV4; 
 	private int[] PORTS = {25565};
 	private int current_port;
+	/* need this to self reference when I start the Client, so it listens to the inputs
+	 * of the "WindowManger" class
+	 */
+	private WindowManager WM;
 	//Flags for Buttons
 	/*
 	* "main" is the main menu flag for method "paint" to draw
@@ -57,9 +72,9 @@ public class WindowManager extends JFrame {
 	Timer graphics;
 	
 	WindowManager(int BOARD_SIZE) {
+		this.WM = this;
 		try {
-			this.myipv4 = InetAddress.getLocalHost();
-			this.IPV4 = myipv4.getHostAddress();
+			this.MYIPV4 = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 		}
@@ -68,70 +83,78 @@ public class WindowManager extends JFrame {
 		this.BOARD_SIZE = BOARD_SIZE;
 		addKeyListener(
 				new KeyListener() {
-					//Not sure if key pressed or keyrelesed is better yet.
-					@Override
+				
 					public void keyTyped(KeyEvent e) {
-						// TODO Auto-generated method stub
+						
 					}
 
-					@Override
 					public void keyPressed(KeyEvent e) {
-						// TODO Auto-generated method stub
 						set_pressed_key(e.getKeyChar());
 						if (e.getKeyChar() == 'l') {
-							debug = !debug;
+							//debug = !debug;
+							join = !join;
 							game = !game;
+						}
+						if(join) {
+							//mac thing
+							if(e.getKeyCode() != 8) {
+								ip += e.getKeyChar();
+							}
+							else {
+								if(ip.length() > 0)
+								ip = ip.substring(0, ip.length()-1);
+							}
+							
 						}
 					}
 
-					@Override
 					public void keyReleased(KeyEvent e) {
-						// TODO Auto-generated method stub
-						//System.out.println("The key Released was: " + e.getKeyChar());
+					
 					}
 					
 				});
 		addMouseListener( 
 				new MouseListener() {
 
-			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 		
 			}
 
-			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height())) {
 					
 				}
 			}
 
-			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height()) && HOST.get_Active()) {
-					
-					System.err.print("clicked ");
+				for (Button button : button_list) {
+					if (mouseX >= button.get_x() && mouseX <= button.get_Width()+button.get_x() && (mouseY >= button.get_y() && mouseY <= button.get_y()+button.get_Height()) && button.get_Active()) {
+						switch(button.get_Text()) {
+						case "JOIN":
+							button.switch_Active();
+							start_client(ip);
+							break;
+						case "HOST":
+							host = !host;
+							button.switch_Active();
+							start_server();
+							start_client("localhost");
+						}
+						System.err.print("clicked ");
+					}
 				}
 			}
 
-			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
+				
 			}
 
-			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 		});
 		addMouseMotionListener(new MouseMotionListener() {
-
-			@Override
 			public void mouseDragged(MouseEvent e) {
 				// TODO Auto-generated method stub
 				mouseX = e.getX();
@@ -142,7 +165,6 @@ public class WindowManager extends JFrame {
 				}
 			}
 
-			@Override
 			public void mouseMoved(MouseEvent e) {
 				// TODO Auto-generated method stub
 				mouseX = e.getX();
@@ -152,10 +174,7 @@ public class WindowManager extends JFrame {
 		});
 		
 		
-		graphics = new Timer(15, new ActionListener() {
-
-
-			@Override
+		graphics = new Timer(33, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				repaint();
 			}
@@ -178,14 +197,23 @@ public class WindowManager extends JFrame {
 		if (debug) {
 			GI.fillRect(mouseX, mouseY, 30, 30);
 			GI.drawString("(" + mouseX + "," + mouseY + ")", 30, 50);
-			GI.drawString(IPV4, 30, 60);
+			GI.drawString(MYIPV4, 30, 60);
 		}
 		if (!main) {
 			GI.setColor(Color.green);
 			draw_button();
 		}
 		if(snake_list == null && game) {
+			GI.setColor(Color.black);
 			GI.drawString("Waiting for another Client to Connect...", screenWidth/2-100, screenHeight/2);
+			if (host) {
+				g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
+				GI.drawString(MYIPV4, screenWidth/2-100, screenHeight/2+70);
+			}
+			else if (join) {
+				g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
+				GI.drawString("IP: " + ip, screenWidth/2-100, screenHeight/2+70);
+			}
 		}
 		//Rendering Snakes
 		if (snake_list != null && game) {
@@ -259,5 +287,32 @@ public class WindowManager extends JFrame {
 	}
 	public void set_snake_list(Snake[] snake_list) {
 		this.snake_list = snake_list;
+	}
+	/*
+	 *  Creating "Runnable" threads of "Server" and "Client" class to
+	 */
+	private void start_server() {
+		Runnable ServerThread = new Runnable () {
+			  public void run() {
+				  try {
+					Server = new Server(25565);
+				} catch (IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+			  }
+			};
+			SOCKET_LIMIT.execute(ServerThread);
+	}
+	private void start_client(String ip) {
+		Runnable ClientThread = new Runnable () {
+			  public void run() {
+				  try {
+					Client = new Client(ip, 25565, WM);
+				} catch (ClassNotFoundException | IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+			  }
+			};
+			SOCKET_LIMIT.execute(ClientThread);
 	}
 }

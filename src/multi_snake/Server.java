@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 //added a comment
-public class Server implements Runnable{
+public class Server {
 	
 	/*
 	 * "Server" class is managing all of the logic through using Snake class,
@@ -17,6 +17,7 @@ public class Server implements Runnable{
 	 * visualizes all of the boards through using an ArrayList<Tail> of both
 	 * Snake objects in the array.
 	 */
+	public boolean stop_server = false;
 	private int PORT;
 	private ServerSocket server;
 	private ArrayList<Tail> tail_list;
@@ -42,22 +43,10 @@ public class Server implements Runnable{
 			USER_LIMIT.execute(element);
 		}
 	}
-	
 	public String get_ip(Socket client) {
 		return client.getRemoteSocketAddress().toString().replace("/", "");
 	}
-
-
-	public void run() {
-		// TODO Auto-generated method stub
-		try {
-			new Server(PORT);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public boolean get_stop_server() {
+		return stop_server;
 	}
 }

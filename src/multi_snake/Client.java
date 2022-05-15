@@ -15,7 +15,7 @@ public class Client {
 	 * sent using "DataOutputStream" as char type to the server to modify the direction of the
 	 * snake, which are sent back by the server.
 	 */
-	
+	private boolean stop_clinet;
 	private Socket client;
 	private InputStream snake_stream;
 	private ObjectInputStream objectInput;
@@ -24,10 +24,11 @@ public class Client {
 	private WindowManager WM;
 	private Snake[] snake_list;
 	
-	public Client(String IP, int PORT) throws UnknownHostException, IOException, InterruptedException, ClassNotFoundException {
+	public Client(String IP, int PORT, WindowManager WM) throws UnknownHostException, IOException, InterruptedException, ClassNotFoundException {
 		//Initializing client server connection
 		//TimeUnit.SECONDS.sleep(6);
-		WM = new WindowManager(0);
+		//WM = new WindowManager(0);
+		this.WM = WM;
 		TimeUnit.MILLISECONDS.sleep(700);
 		Socket client = new Socket(IP, PORT);
 		System.out.println("[Client has Connected]");
@@ -38,7 +39,7 @@ public class Client {
 		
 		try {
 		
-			while(client.isConnected()) {
+			while(client.isConnected() && !stop_clinet) {
 				TimeUnit.MILLISECONDS.sleep(100);
 				//send the input to the server
 				dataOutput.writeChar(WM.get_pressed_key());
@@ -54,14 +55,16 @@ public class Client {
 			client.close();
 			System.err.println("Server crashed :(");
 			e.printStackTrace();
+		} finally {
+			dataOutput.flush();
+			dataOutput.close();
+			client.close();
 		}
-		dataOutput.flush();
-		dataOutput.close();
-		client.close();
 	}
 	
 	public static void main(String args[]) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
 		new WindowManager(10);
-		//new Client("localhost", 25565);
-	}   
+		//new Client("localhost", 25565, new WindowManager(0));
+	}
+	
 }

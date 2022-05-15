@@ -15,7 +15,7 @@ who is a better snake player.
 - [x] Have Snake Board being visualized and sent between a Server and a Client
   - [x] Have two Boards, their Snakes and apples being rendered
   - [ ] Add a choice to play SinglePlayer Snake
-  - [ ] Add Menus to the GUI to be able to Host or Join the Server
+  - [x] Add Menus to the GUI to be able to Host or Join the Server
 - [x] Make a Multi-Threaded Server to handle multiple Client inputs
   - [x] See the updated boards during the game
 

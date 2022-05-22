@@ -31,6 +31,7 @@ public class Client {
 		this.WM = WM;
 		TimeUnit.MILLISECONDS.sleep(700);
 		Socket client = new Socket(IP, PORT);
+		client.setTcpNoDelay(true);
 		Client_Connected = client.isConnected();
 		System.out.println("[Client has Connected]");
 		InputStream snake_stream = client.getInputStream();

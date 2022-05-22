@@ -32,6 +32,7 @@ public class Server {
 		while (ClientsConnected != 2) {
 			System.out.println("[Server is waiting for the Connections] | Connection Count: " + ClientsConnected);
 			Socket client = server.accept();
+			client.setTcpNoDelay(true);
 			System.out.println("[Client #" + (ClientsConnected+1) + " has Connected]:"+ get_ip(client));
 			clients.add(new ClientHandler(client, ClientsConnected, clients));
 			ClientsConnected++;

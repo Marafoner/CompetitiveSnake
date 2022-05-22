@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable{
 		Snake user = user_board;
 		try {
 			while(client.isConnected() && !StopThread) {
-				TimeUnit.MILLISECONDS.sleep(100);
+				TimeUnit.MILLISECONDS.sleep(800);
 				char direction = dataInput.readChar();
 				//Runs all of the logic right here
 				if(user.get_tail_list().size() > 1) {

@@ -13,6 +13,7 @@ public class Snake implements Serializable{
 	 */
 	
 	private static final long serialVersionUID = 1L;
+	private boolean defeat = false;
 	private int clientID;
 	private int SCORE;
 	private int MAX_SCORE;
@@ -169,6 +170,12 @@ public class Snake implements Serializable{
 
 	public int get_MAXSCORE() {
 		return MAX_SCORE;
+	}
+	public boolean get_defeat() {
+		return defeat;
+	}
+	public void set_defeat(boolean defeat) {
+		this.defeat = defeat;
 	}
 	public String toString_tail() {
 		return "(" + get_snakeHead().get_x() + "," + get_snakeHead().get_y() + ")" + "Score: " + get_SCORE() + "\n Apple: (" + get_apple_list().get(0).get_x() + get_apple_list().get(0).get_y() + ")";

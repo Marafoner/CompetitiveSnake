@@ -145,12 +145,7 @@ public class WindowManager extends JFrame {
 		});
 		addMouseMotionListener(new MouseMotionListener() {
 			public void mouseDragged(MouseEvent e) {
-				mouseX = e.getX();
-				mouseY = e.getY();
-				if (mouseX >= HOST.get_x() && mouseX <= HOST.get_Width()+HOST.get_x() && (mouseY >= HOST.get_y() && mouseY <= HOST.get_y()+HOST.get_Height())) {
-					HOST.set_y(mouseY-40);
-					HOST.set_x(mouseX-40);
-				}
+				
 			}
 
 			public void mouseMoved(MouseEvent e) {
@@ -181,11 +176,6 @@ public class WindowManager extends JFrame {
 		GI.fillRect(0, 0, screenWidth, screenHeight);
 		GI.setColor(Color.black);
 		//Waiting Menu for the Game to begin
-		if (debug) {
-			GI.drawString(MYIPV4, 10, 40);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
-			GI.drawString("how did i make this work wth?", 10, 50);
-		}
 		if (!main) {
 			draw_button();
 		}

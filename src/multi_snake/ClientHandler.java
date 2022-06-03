@@ -17,7 +17,7 @@ public class ClientHandler implements Runnable{
 	private DataInputStream dataInput;
 	private OutputStream snake_stream;
 	private ObjectOutputStream objectOutput;
-	private Snake user_board = new Snake(0, 9, 3);
+	private Snake user_board = new Snake(0, 9, 1);
 	private ArrayList<ClientHandler> clients;
 	private Snake[] snake_board = {user_board, user_board};
 	private int id; //ID of the board we send input for
@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable{
 		Snake user = user_board;
 		try {
 			while(client.isConnected() && !StopThread) {
-				TimeUnit.MILLISECONDS.sleep(800);
+				TimeUnit.MILLISECONDS.sleep(100);
 				char direction = dataInput.readChar();
 				//Runs all of the logic right here
 				if(user.get_tail_list().size() > 1) {
@@ -83,11 +83,10 @@ public class ClientHandler implements Runnable{
 				}
 				// user.get_tail_list().get(0).set_direction(direction);
 				user.eaten_apple();
-				user.move_tails();
+				if(!user.get_defeat())
+					user.move_tails();
 				if(user.collision_check()) {
-					System.err.println("I hit something :(");
-					//StopThread = !StopThread;
-					break;
+					user.set_defeat(true);
 				}
 				//Sends the snake boards to the client to render
 				snake_board[id] = user;

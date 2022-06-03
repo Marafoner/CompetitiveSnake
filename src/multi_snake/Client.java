@@ -29,7 +29,7 @@ public class Client {
 		//TimeUnit.SECONDS.sleep(6);
 		//WM = new WindowManager(0);
 		this.WM = WM;
-		TimeUnit.MILLISECONDS.sleep(700);
+		TimeUnit.MILLISECONDS.sleep(100);
 		Socket client = new Socket(IP, PORT);
 		client.setTcpNoDelay(true);
 		Client_Connected = client.isConnected();
